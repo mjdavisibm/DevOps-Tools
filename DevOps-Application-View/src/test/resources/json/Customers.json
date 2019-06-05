@@ -1,0 +1,19 @@
+[
+	{
+		"id": 1,
+		"name": {
+			"firstName": "Franklin",
+			"middleName": "Bill",
+			"lastName": "Tester",
+			"preferredName": "Frank"
+		},
+		"gender": "MALE",
+		"dob": "1997-05-15",
+		"address": {
+			"street": "1 Test Avenue",
+			"city": "New York",
+			"state": "NY",
+			"zip": "08828"
+		}
+	}
+]

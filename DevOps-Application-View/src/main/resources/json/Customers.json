@@ -1,0 +1,19 @@
+[
+	{
+		"id": 1,
+		"name": {
+			"firstName": "Matthew",
+			"middleName": "John",
+			"lastName": "Davis",
+			"preferredName": "Matt"
+		},
+		"gender": "MALE",
+		"dob": "2018-01-01",
+		"address": {
+			"street": "1 Somewhere Avenue",
+			"city": "Denver",
+			"state": "COLORADO",
+			"zip": "80237"
+		}
+	}
+]
