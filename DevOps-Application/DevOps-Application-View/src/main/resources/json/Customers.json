@@ -1,19 +1,36 @@
 [
 	{
-		"id": 1,
+		"id": 1100,
 		"name": {
 			"firstName": "Matthew",
 			"middleName": "John",
 			"lastName": "Davis",
 			"preferredName": "Matt"
 		},
-		"gender": "MALE",
-		"dob": "2018-01-01",
+		"gender": "Male",
+		"dob": "1999-01-01",
 		"address": {
 			"street": "1 Somewhere Avenue",
 			"city": "Denver",
 			"state": "CO",
 			"zip": "80237"
+		}
+	},
+	{
+		"id": 10003,
+		"name": {
+			"firstName": "Samantha",
+			"middleName": "Hilda",
+			"lastName": "Smith",
+			"preferredName": "Sam"
+		},
+		"gender": "Female",
+		"dob": "1992-07-24",
+		"address": {
+			"street": "1 Grate Street",
+			"city": "Littleton",
+			"state": "CO",
+			"zip": "80238"
 		}
 	}
 ]

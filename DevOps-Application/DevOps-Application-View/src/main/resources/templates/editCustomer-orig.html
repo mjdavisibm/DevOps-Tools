@@ -1,0 +1,55 @@
+<!-- tag::allButValidation[] -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Edit Customer</title>
+    <link rel="stylesheet" th:href="@{/editCustomer.css}" />
+  </head>
+
+  <body>
+
+    <form method="POST" th:object="${chosenCutsomer}">
+<fieldset
+     <p>Name: </p>
+      <label for="firstName">First Name: </label>
+      <input type="text" th:field="*{name.firstName}" />      
+       	<label for="middleName">Middle Name: </label>     
+  		<input type="text" th:field="*{name.middleName}" />
+  		    
+        <label for="lastName">Last Name: </label>
+        <input type="text" th:field="*{name.lastName}" />
+        
+        <label for="preferredName">Preferred Name: </label>
+        <input type="text" th:field="*{name.preferredName}" />     
+      <br/>
+      
+        <label for="gender">Gender</label>
+        <input type="text" th:field="*{gender}"/>
+        
+        <label for="dob">DOB</label>
+        <input type="text" th:field="*{dob}" />
+      
+      <p>Address</p>
+      <label for="street">Street address: </label>
+      <input type="text" th:field="*{address.street}"/>
+      <br/>
+
+      <label for="city">City: </label>
+      <input type="text" th:field="*{address.city}"/>
+      <br/>
+
+      <label for="state">State: </label>
+      <input type="text" th:field="*{address.state}"/>
+      <br/>
+
+      <label for="zip">Zip code: </label>
+      <input type="text" th:field="*{address.zip}"/>
+      <br/>
+
+      <input type="submit" value="Create New Customer"/>
+      <input type="reset" value="Cancel"/>
+    </form>
+
+  </body>
+</html>

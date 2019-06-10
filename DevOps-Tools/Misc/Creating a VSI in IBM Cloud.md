@@ -2,27 +2,36 @@
 
 This document describes the best practice to create your first Virtual Server Instance (VSI) in IBM Cloud.
 
-##1. Configure Your Environment
+##1. Create and Configure your IBM Cloud Account
 This section describes the recommended way to set up your IBM Cloud account prior to creating devices, services etc. Some of these steps are documented in [IBM Cloud Best Practice web page](https://cloud.ibm.com/account/best-practices)
 
-###A. Get an IBM ID for your account using your Corporate email address
-Before you begin anything make sure you have an IBMid so you can login correctly into your IBM Cloud Account. This should already have been set up for you when you purchased the account. It will use your corporate email address.
+###A. What happens once the PO is signed
+Once a PO is signed an email is sent to the PO owner who should forward it to the project team lead or manager. This email will tell the team how to activate the IBM Cloud admin account.
 
-> Register for an [IBMid here](http://www.ibm.com/account/reg/us-en/signup?formid=urx-19776) using your **corporate** email.
+> Our recommended approach is to use a general admin ID for the project and not an individual's ID. The ID is an email address at the corporation, e.g <project name>-admin@mycompany.com The email address must have active email box as registration informsation will be sent to it
 
-Log in to IBM Cloud at (http://cloud.ibm.com)
+If for some reason an admin email address can not be created then an individuals can be used BUT if that person leaves/moves on from the project it is a little cumbersome to give admin rights to another individual.
+
+###B. Get an IBM ID for your account using your Corporate email address
+With either the admin email or individual email address follow the instructions in the PO email to create an IBMid. Make sure a corporate email is used.
+
+Anyone else who needs to be an administrator of the account should also register for an IBMid.
+
+> Register for an IBMid [here](http://www.ibm.com/account/reg/us-en/signup?formid=urx-19776) using your **corporate** email.
+
+Log in to IBM Cloud at [http://cloud.ibm.com](http://cloud.ibm.com)
 
 It is possible to have your IBMid associated with 1 or more IBM Cloud accounts, so make sure you look in the top right of the dashboard where your _"account# - name"_ appears and if necessary select the right account. 
 
 > Note: There is no need to give anyone else access to the IBM Cloud Dashboard. They only need access IF they need to add, modify, remove resources (e.g. VSI) or generally manage the IBM Cloud Account
 
-###B. Set up an account owner's SSH keys to use for the servers
+###C. Set up an account owner's SSH keys to use for the servers
 Our recommended approach, to manage access to resources on IBM cloud, is through RSA SSH keys. This means
 1. As the account owner you can use **one** key (certificate) to log in to **all** your virtual servers. However, each server can have its own root password and you do not have to share that password
 2. Additional people who need access to the server can create their own public/private keys to log onto the server as any user (including root), and no one _shares_ passwords or certificates. To do this they need to send you their public keys that you add to the appropriate server account
 
 #####Check if you already have an ssh key
-If you are not sure if you have an ssh key and are using a unix based system (Mac, Linux) check your home directory for a folder called .ssh (i.e. `ls ~/.ssh`). If there are at lest two files in there called **id_rsa** (your private key) and an **id_rsa.pub** (your public key) then you can utilize those. For more details see [here](https://cloud.ibm.com/docs/vpc-on-classic-vsi?topic=vpc-on-classic-vsi-ssh-keys) or[here](https://cloud.ibm.com/docs/vsi?topic=virtual-servers-ssh-keys)
+If you are not sure if you have an ssh key and are using a unix based system (Mac, Linux) check your home directory for a folder called `.ssh` (i.e. `ls ~/.ssh`). If there are at lest two files in there called **id_rsa** (your private key) and an **id_rsa.pub** (your public key) then you can utilize those. For more details see [here](https://cloud.ibm.com/docs/vpc-on-classic-vsi?topic=vpc-on-classic-vsi-ssh-keys) or[here](https://cloud.ibm.com/docs/vsi?topic=virtual-servers-ssh-keys)
 
 If you have never created an ssh key perform the following.
 
@@ -39,22 +48,6 @@ We will be uploading the public version of the key to IBM Cloud and then attach 
 > Actions:
 
 > Menu (Hamburger in top left) --> Classic Infrastructure --> Devices (on left menu) --> Manage --> SSH Keys --> Add (The easiest way to upload your public key is to use "Browse" and select your id_rsa.pub file (found in ~/.ssh). Label it with a meaningful name (and add a description if you want to)
-
-Tou will be attaching this key to you VSIs. 
-
-
-> To create a SSH                         key on a 
-
-
-ssh-keygen
-
-ssh-copy-id -i    
-
-changing root password
-
-visudu
-man visudo
-sudo group
 
 ##2. Create your first VSI
 

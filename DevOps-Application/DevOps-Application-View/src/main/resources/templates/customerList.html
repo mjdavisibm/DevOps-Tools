@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Customer List</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../css/customerList.css" th:href="@{/css/customerList.css}" />
+</head>
+
+<body>
+	<form action="#" th:action="@{/}" th:object="${chosenCustomer}"
+		method="POST">
+		<p>Please select a customer to edit</p>
+		<div>
+			<table border="1" id="customerTable" class="table">
+				<thead>
+					<tr>
+						<th>Edit</th>
+						<th>Name</th>
+						<th>Gender</th>
+						<th>Date of Birth</th>
+						<th>Address</th>
+					</tr>
+				</thead>
+				<tr th:each="c : ${customers}">
+					<td>
+						<button type="submit" name="editCustomer" th:value="${c}">Edit</button>
+						<button type="submit" name="deleteCustomer" th:value="${c}">Delete</button>
+					</td>
+					<td
+						th:text="${c.name.firstName + ' ' + c.name.middleName+ ' ' + c.name.lastName+ ' (' + c.name.preferredName + ')'}">
+						Name of Person</td>
+					<td th:text="${c.gender}">Gender</td>
+					<td th:TEXT="${c.dob}">DOB</td>
+					<td
+						th:text="${c.address.street + ', ' + c.address.city + ', ' + c.address.state.abbreviation + '  ' + c.address.zip}">Address</td>
+				</tr>
+			</table>
+		</div>
+		<div class="submit">
+			<button type="submit" name="addCustomer">Add New Customer</button>
+		</div>
+	</form>
+</body>
+</html>
