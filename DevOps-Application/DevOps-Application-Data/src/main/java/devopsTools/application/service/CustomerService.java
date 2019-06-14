@@ -6,9 +6,10 @@ import devopsTools.application.domain.Customer;
 import devopsTools.application.domain.Name;
 
 public interface CustomerService {
-	   public abstract void createCustomer(Customer customer);
+	   public abstract Customer createCustomer(Customer customer);
 	   public abstract void updateCustomer(Customer customer);
 	   public abstract void deleteCustomer(Customer customer);
+	   public abstract void deleteAllCustomers();
 	   public abstract List<Customer> getCustomers();
 	   public abstract void createCustomers(List<Customer> customers);
 	   

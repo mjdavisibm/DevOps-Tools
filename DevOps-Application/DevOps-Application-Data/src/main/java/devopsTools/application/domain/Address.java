@@ -5,35 +5,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Data
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(includeFieldNames = true)
 // <data>
 @Embeddable
 // </data>
-public class Address {
+public class Address extends DomainBase{
 
+	@Size(min=3, message="Street must be at least 3 characters long")
+	@NotNull
 	private String street;
+	@Size(min=3, message="City must be at least 3 characters long")
+	@NotNull
 	private String city;
 	
-	@NonNull
+	@NotNull
 	private State state;
 	
 	@Pattern(regexp="^[0-9]{5}(?:-[0-9]{4})?$",
 	          message="Must be a valid zip code xxxxx or xxxxx-xxx")
+	@NotNull
 	private String zip;
 	
 	public enum State {

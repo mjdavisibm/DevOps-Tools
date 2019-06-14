@@ -1,6 +1,7 @@
 package devopsTools.application.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerRepository customerRepo;
 
 	@Override
-	public void createCustomer(Customer customer) {
-		customerRepo.save(customer);
+	public Customer createCustomer(Customer customer) {
+		return customerRepo.save(customer);
 	}
 
 	@Override
@@ -48,12 +49,20 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer findByName(Name name) {
-		return customerRepo.findByName(name);
+		Optional<Customer> ocust = customerRepo.findByName(name);
+		if (ocust.isPresent())
+			return ocust.get();
+		return null;
 	}
 
 	@Override
 	public int getNumberOfCustomers() {
 		return (int) customerRepo.count();
+	}
+
+	@Override
+	public void deleteAllCustomers() {
+		customerRepo.deleteAll();
 	}
 
 }

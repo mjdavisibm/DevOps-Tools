@@ -3,23 +3,27 @@ package devopsTools.application.rest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,96 +33,111 @@ import devopsTools.application.DevOpsApplicationDataApplication;
 import devopsTools.application.domain.Address;
 import devopsTools.application.domain.Address.State;
 import devopsTools.application.domain.Customer;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RunWith(SpringRunner.class)
-@SpringBootTest
-//@WebAppConfiguration
-//@WebMvcTest
-@AutoConfigureTestEntityManager
-@AutoConfigureMockMvc
-//@ContextConfiguration(classes=DevOpsApplicationDataApplication.class)
-//@DataJpaTest
-//@AutoConfigureWebMvc
+@SpringBootTest(classes = DevOpsApplicationDataApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CustomerRestTest extends CustomerTest {
-	
-	@Autowired
-	private MockMvc mvc;
+
+	@LocalServerPort
+	private int port;
+
+	private TestRestTemplate template = new TestRestTemplate();
+	HttpHeaders headers = new HttpHeaders();
+
+	@Before
+	public void setupJSONAcceptType() {
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+	}
+
+	private String createUrl(String uri) {
+		return "http://localhost:" + port + uri;
+	}
 
 	@Test
-	public void getGETCustomers() throws Exception {
-		populateCustomerDB();
-		String uri = "/customers";
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
+	public void getGETCustomer() throws Exception {
+		getTestCustomers();
+		String uri = "/customers/" + testCustomer.getId();
 
-		int status = mvcResult.getResponse().getStatus();
+		ResponseEntity<String> response = template.exchange(createUrl(uri), HttpMethod.GET,
+				new HttpEntity<String>(null, headers), String.class);
+		int status = response.getStatusCodeValue();
 		assertEquals(200, status);
-		String content = mvcResult.getResponse().getContentAsString();
-		Customer[] productlist = super.mapFromJson(content, Customer[].class);
-		assertTrue(productlist.length == 2);
+
+		log.trace("Actual customer: {}", response.getBody());
+		log.trace("Expected customer: {}", testCustomer.toPrettyPrintJson());
+		String expected = super.mapToJson(testCustomer).replaceAll("\"id\":[0-9]*,", "");
+		log.trace("Expected json: {}", expected);
+		JSONAssert.assertEquals(expected, response.getBody(), false);
 	}
 
 	@Test
+	@DirtiesContext
 	public void createPOSTCustomer() throws Exception {
-		List<Customer> customers = getTestCustomers();
-
+		getTestCustomers();
 		String uri = "/customers";
-		String inputJson = super.mapToJson(customers.get(0));
-		MvcResult mvcResult = mvc.perform(
-				MockMvcRequestBuilders.post(uri).contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
-				.andReturn();
 
-		int status = mvcResult.getResponse().getStatus();
+		testCustomer.setId(0L);
+		ResponseEntity<String> response = template.exchange(createUrl(uri), HttpMethod.POST,
+				new HttpEntity<Customer>(testCustomer, headers), String.class);
+		int status = response.getStatusCodeValue();
 		assertEquals(201, status);
-		String content = mvcResult.getResponse().getContentAsString();
-		assertEquals(content, "Customer is created successfully");
+
+		log.trace("Actual customer: {}", response.getBody());
+		log.trace("Expected customer: {}", testCustomer.toPrettyPrintJson());
+		String expected = super.mapToJson(testCustomer).replaceAll("\"id\":[0-9]*,", "");
+		log.trace("Expected json: {}", expected);
+		JSONAssert.assertEquals(expected, response.getBody(), false);
+
+		String actual = response.getHeaders().get(HttpHeaders.LOCATION).get(0);
+		assertTrue(actual.contains(uri + "/" + 1));
 	}
 
 	@Test
+	@DirtiesContext
 	public void updatePUTCustomer() throws Exception {
-		populateCustomerDB();
+		getTestCustomers();
 		String uri = "/customers/" + testCustomer.getId();
 
 		Address a = new Address("100 Changed Address", "Change Me", State.CALIFORNIA, "99999");
 		testCustomer.setAddress(a);
-		String inputJson = super.mapToJson(testCustomer);
-		MvcResult mvcResult = mvc.perform(
-				MockMvcRequestBuilders.put(uri).contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
-				.andReturn();
-
-		int status = mvcResult.getResponse().getStatus();
+		ResponseEntity<String> response = template.exchange(createUrl(uri), HttpMethod.PUT,
+				new HttpEntity<Customer>(testCustomer, headers), String.class);
+		int status = response.getStatusCodeValue();
 		assertEquals(200, status);
-		String content = mvcResult.getResponse().getContentAsString();
-		assertEquals(content, "Customer is updated successsfully");
+
+		log.trace("Actual customer: {}", response.getBody());
+		log.trace("Expected customer: {}", testCustomer.toPrettyPrintJson());
+		String expected = super.mapToJson(testCustomer).replaceAll("\"id\":[0-9]*,", "");
+		log.trace("Expected json: {}", expected);
+		JSONAssert.assertEquals(expected, response.getBody(), false);
+
+		String actual = response.getHeaders().get(HttpHeaders.LOCATION).get(0);
+		assertTrue(actual.contains(uri));
+
 	}
-	
+
 	@Test
 	public void updatePATCHCustomer() throws Exception {
-		populateCustomerDB();
+		getTestCustomers();
 		String uri = "/customers/" + testCustomer.getId();
+		Address a = new Address("100 Changed Address", "Change Me", State.CALIFORNIA, "99999");
 
-		Address a = new Address("72 Changed Address", "Change Me", State.CALIFORNIA, "99999");
-		String inputJson = super.mapToJson(a);
-		MvcResult mvcResult = mvc.perform(
-				MockMvcRequestBuilders.put(uri).contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson))
-				.andReturn();
-
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
-		String content = mvcResult.getResponse().getContentAsString();
-		assertEquals(content, "Customer Address is updated successsfully");
 	}
 
 	@Test
+	@DirtiesContext
 	public void deleteDELETECustomer() throws Exception {
-		populateCustomerDB();
+		getTestCustomers();
 		String uri = "/customers/" + testCustomer.getId();
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(uri)).andReturn();
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
-
-		String content = mvcResult.getResponse().getContentAsString();
-		assertEquals(content, "Customer is deleted successsfully");
+		ResponseEntity<String> response = template.exchange(createUrl(uri), HttpMethod.DELETE,
+				new HttpEntity<String>(null, headers), String.class);
+		int status = response.getStatusCodeValue();
+		assertEquals(204, status);
+		// need to see if delete should indeed return object deleted)
+//		String actual = response.getHeaders().get(HttpHeaders.LOCATION).get(0);
+//		assertTrue(actual.contains(uri));
 	}
 
 }

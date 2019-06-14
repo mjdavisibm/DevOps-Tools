@@ -16,10 +16,10 @@ import lombok.ToString;
 //<data>
 @Embeddable
 //</data>
-public class Name {
+public class Name extends DomainBase{
 	
 	  @NotNull
-	  @Size(min=1, message="Name must be at least 5 characters long")
+	  @Size(min=3, message="Name must be at least 3 characters long")
 	  private String firstName;
 
 	  private String middleName;

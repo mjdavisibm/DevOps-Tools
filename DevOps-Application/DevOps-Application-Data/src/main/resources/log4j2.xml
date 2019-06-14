@@ -7,29 +7,27 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Root level="error">
+		<Root level="warn">
 			<AppenderRef ref="Console" />
 		</Root>
 
-		<Logger name="com.devopstools.application" level="trace" />
+		<Logger name="devopsTools.application" level="trace" />
 
-		<Logger name="org.springframework.web.servlet" level="warn" />
-		<Logger name="org.springframework.web.context" level="warn" />
-
-		<Logger name="org.thymeleaf" level="debug" />
-		<Logger name="org.thymeleaf.TemplateEngine" level="debug" />
-		<Logger name="org.thymeleaf.TemplateEngine.CONFIG" level="warn" />
-		<Logger name="org.thymeleaf.TemplateEngine.TIMER" level="warn" />
-		<Logger
-			name="org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE" level="warn" />
-		<Logger
-			name="org.thymeleaf.TemplateEngine.cache.FRAGMENT_CACHE" level="warn" />
-		<Logger name="org.thymeleaf.TemplateEngine.cache.MESSAGE_CACHE"
-			level="warn" />
-		<Logger
-			name="org.thymeleaf.TemplateEngine.cache.EXPRESSION_CACHE"
-			level="warn" />
-
+		<logger name="org.apache.catalina.startup.DigesterFactory"
+			level="ERROR" />
+		<logger name="org.apache.catalina.util.LifecycleBase"
+			level="ERROR" />
+		<logger name="org.apache.coyote.http11.Http11NioProtocol"
+			level="WARN" />
+		<logger name="org.apache.sshd.common.util.SecurityUtils"
+			level="WARN" />
+		<logger name="org.apache.tomcat.util.net.NioSelectorPool"
+			level="WARN" />
+		<logger
+			name="org.eclipse.jetty.util.component.AbstractLifeCycle"
+			level="ERROR" />
+		<logger name="org.hibernate.validator.internal.util.Version"
+			level="WARN" />
 
 	</Loggers>
 </Configuration>

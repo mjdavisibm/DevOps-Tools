@@ -8,50 +8,68 @@ import java.util.Date;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.AccessLevel;
 
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor
+// Access need to be protected or private
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString(includeFieldNames = true)
+@EqualsAndHashCode
 // <data>
 @Entity
 // </data>
-public class Customer {
+public class Customer extends DomainBase{
 
 	// <data>
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	// </data>
 	private long id;
 
 	// <data>
 	@Embedded
 	// </data>
-	@NonNull
+	@NotNull
 	private Name name;
 	@NonNull
 	private Gender gender;
 
-	@NonNull
+	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Date dob;
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonSerialize(using = LocalDateSerializer.class)
+	// need to fix dates
+	@Past(message = "Date of Birth cannot be in the future")
+	private LocalDate dob;
 
 	// <data>
 	@Embedded
 	// </data>
-	@NonNull
+	@NotNull
 	private Address address;
 
 	@AllArgsConstructor
@@ -68,24 +86,10 @@ public class Customer {
 	}
 
 	@JsonIgnore
-	public double getAge() {
-		LocalDate today = LocalDate.now();
-		Period p = Period.between(this.dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), today);
-		return p.getYears();
+	public int getAge() {
+		LocalDate today = LocalDate.now();		
+		return Period.between(this.dob, today).getYears();
 	}
 
-	/*
-	 * Uses a pretty printer mechanism to send back JSON for this object
-	 */
-	public String toPrettyPrintJson() {
-		String prettyJson = this.toString();
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			 prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return prettyJson;
-	}
 
 }

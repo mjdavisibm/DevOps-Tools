@@ -1,14 +1,26 @@
 package devopsTools.application.data;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
-import devopsTools.application.domain.Address;
 import devopsTools.application.domain.Customer;
 import devopsTools.application.domain.Name;
 
 @Repository
-public interface CustomerRepository extends CrudRepository<Customer, Long> {
-	public Customer findByName(Name name);	
+@Transactional
+@RepositoryRestResource(path="customers",collectionResourceRel="customers")
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
+	
+	public Optional<Customer> findByName(Name name);	
+	
+	@Query("Select c From Customer c where street like '%Avenue'")
+	List<Customer> customersOnAvenues();
 
 }

@@ -7,32 +7,13 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Root level="error">
+		<Root level="warn">
 			<AppenderRef ref="Console" />
 		</Root>
 
-		<Logger name="com.devopstools.application" level="trace" />
-		
-		<Logger name="org.springframework.web.servlet" level="warn" />
-		<Logger name="org.springframework.web.context" level="warn" />
-	
-		<Logger name="org.thymeleaf" level="debug" />
-		<Logger name="org.thymeleaf.TemplateEngine" level="debug" />
-		<Logger name="org.thymeleaf.TemplateEngine.CONFIG"
+		<Logger name="devopsTools.application" level="trace" />
+		<logger name="org.hibernate.validator.internal.util.Version"
 			level="WARN" />
-		<Logger name="org.thymeleaf.TemplateEngine.TIMER" level="warn" />
-		<Logger
-			name="org.thymeleaf.TemplateEngine.cache.TEMPLATE_CACHE"
-			level="warn" />
-		<Logger
-			name="org.thymeleaf.TemplateEngine.cache.FRAGMENT_CACHE"
-			level="warn" />
-		<Logger name="org.thymeleaf.TemplateEngine.cache.MESSAGE_CACHE"
-			level="warn" />
-		<Logger
-			name="org.thymeleaf.TemplateEngine.cache.EXPRESSION_CACHE"
-			level="warn" />
-		
 
 	</Loggers>
 </Configuration>
