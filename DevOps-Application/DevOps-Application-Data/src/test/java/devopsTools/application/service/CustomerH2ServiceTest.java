@@ -15,24 +15,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import devopsTools.application.CustomerTest;
 import devopsTools.application.domain.Address;
 import devopsTools.application.domain.Address.State;
 import devopsTools.application.domain.Customer;
+import devopsTools.application.domain.CustomerTest;
+import devopsTools.application.service.H2Impl.CustomerServiceH2Impl;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CustomerServiceTest extends CustomerTest{
+//@ContextConfiguration(classes = ConfigureH2ServiceImpl.class)
+public class CustomerH2ServiceTest extends CustomerTest {
 
 	@TestConfiguration
-    static class EmployeeServiceImplTestContextConfiguration {
-  
-        @Bean
-        public CustomerService customerService() {
-            return new CustomerServiceImpl();
-        }
-    }
-    
+	static class TestContextConfiguration {
+		@Bean
+		public CustomerService customerService() {
+			return new CustomerServiceH2Impl();
+		}
+	}
+	
 	@Autowired
 	private CustomerService customerService;
 
@@ -42,7 +43,7 @@ public class CustomerServiceTest extends CustomerTest{
 
 	@Test
 	@DirtiesContext
-	public void create_test() {
+	public void create_test() throws Exception {
 		List<Customer> customers = getTestCustomers();
 		customerService.deleteAllCustomers();
 		customerService.createCustomers(customers);
@@ -53,7 +54,7 @@ public class CustomerServiceTest extends CustomerTest{
 	}
 
 	@Test
-	public void read_test() {
+	public void read_test() throws Exception {
 		getTestCustomers();
 		Customer c = customerService.findByName(testCustomer.getName());
 		assertThat(c.getName()).isEqualTo(testCustomer.getName());
@@ -61,7 +62,7 @@ public class CustomerServiceTest extends CustomerTest{
 
 	@Test
 	@DirtiesContext
-	public void update_test() {
+	public void update_test() throws Exception {
 		getTestCustomers();
 
 		Customer c = customerService.findByName(testCustomer.getName());
@@ -76,13 +77,12 @@ public class CustomerServiceTest extends CustomerTest{
 
 	@Test
 	@DirtiesContext
-	public void delete_test() {
+	public void delete_test() throws Exception {
 		getTestCustomers();
 		long count = customerService.getNumberOfCustomers();
 
 		customerService.deleteCustomer(testCustomer);
 		assertTrue(customerService.getNumberOfCustomers() == count - 1);
 	}
-
 
 }

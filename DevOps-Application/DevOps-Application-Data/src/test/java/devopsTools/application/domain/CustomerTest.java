@@ -1,12 +1,14 @@
-package devopsTools.application;
+package devopsTools.application.domain;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.junit.BeforeClass;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,10 +27,37 @@ public abstract class CustomerTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
-
+	
+	/*
+	 * Used to get test customers from a json File
+	 */
+	
+	private List<Customer> loadJSONData() {
+		String filename = "/json/Customers.json";
+		List<Customer> allObjs = null;
+		log.debug("Loading '" + Customer.class + "' from Json file: " + filename);
+		ObjectMapper mapper = new ObjectMapper();
+		TypeReference<List<Customer>> typeReference = new TypeReference<List<Customer>>() {
+		};
+		InputStream inputStream = TypeReference.class.getResourceAsStream(filename);
+		try {
+			allObjs = mapper.readValue(inputStream, typeReference);
+			if (log.isDebugEnabled()) {
+				for (Customer obj : allObjs) {
+					log.trace("Line Item: " + obj);
+				}
+			}
+		} catch (IOException e) {
+			log.warn("Unable to load JSON file: " + filename + "\n Error Message: " + e.getMessage());
+		}
+		return allObjs;
+	} 
+	/*
+	 * Used to get from a json file some test customers
+	 */
 	protected List<Customer> getTestCustomers() {
-		log.trace("getting test customer from JSON");
-		List<Customer> customers = CustomerJSONLoader.loadJSONData();
+		log.debug("Getting test customers from JSON FIle");
+		List<Customer> customers = loadJSONData();
 		testCustomer = customers.get(0);
 		testCount = customers.size();
 		return customers;

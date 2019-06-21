@@ -28,11 +28,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import devopsTools.application.CustomerTest;
 import devopsTools.application.DevOpsApplicationDataApplication;
 import devopsTools.application.domain.Address;
 import devopsTools.application.domain.Address.State;
 import devopsTools.application.domain.Customer;
+import devopsTools.application.domain.CustomerTest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

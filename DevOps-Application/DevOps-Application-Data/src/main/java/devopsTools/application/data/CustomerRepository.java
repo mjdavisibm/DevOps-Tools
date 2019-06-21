@@ -15,11 +15,11 @@ import devopsTools.application.domain.Name;
 
 @Repository
 @Transactional
-@RepositoryRestResource(path="customers",collectionResourceRel="customers")
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
-	
-	public Optional<Customer> findByName(Name name);	
-	
+@RepositoryRestResource(path = "customers", collectionResourceRel = "customers")
+public interface CustomerRepository extends JpaRepository<Customer, Long>, CustomizedCustomerRepository {
+
+	public Optional<Customer> findByName(Name name);
+
 	@Query("Select c From Customer c where street like '%Avenue'")
 	List<Customer> customersOnAvenues();
 

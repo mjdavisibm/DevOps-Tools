@@ -1,4 +1,4 @@
-package devopsTools.application.service;
+package devopsTools.application.service.H2Impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,20 +9,21 @@ import org.springframework.stereotype.Service;
 import devopsTools.application.data.CustomerRepository;
 import devopsTools.application.domain.Customer;
 import devopsTools.application.domain.Name;
+import devopsTools.application.service.CustomerService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceH2Impl implements CustomerService {
 
 	@Autowired
 	private CustomerRepository customerRepo;
 
 	@Override
-	public Customer createCustomer(Customer customer) {
-		return customerRepo.save(customer);
+	public boolean createCustomer(Customer customer) {
+		Customer savedCustomer = customerRepo.save(customer);
+		return savedCustomer == customer;
 	}
 
 	@Override

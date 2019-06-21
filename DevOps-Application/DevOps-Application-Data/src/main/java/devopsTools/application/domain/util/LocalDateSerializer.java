@@ -1,4 +1,4 @@
-package devopsTools.application.domain;
+package devopsTools.application.domain.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

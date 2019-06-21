@@ -90,12 +90,14 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!-- Begin Docker -->
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.9</version>
 				<configuration>
-					<repository>${docker.image.prefix}/${project.artifactId}</repository>
+					<repository>${docker.image.prefix}/devops-tools-data</repository>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -120,6 +122,8 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- End Docker -->
+			
 		</plugins>
 	</build>
 

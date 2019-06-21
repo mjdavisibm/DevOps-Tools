@@ -2,11 +2,14 @@ package devopsTools.application.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import devopsTools.application.domain.Customer;
 import devopsTools.application.domain.Name;
 
+@Service
 public interface CustomerService {
-	   public abstract Customer createCustomer(Customer customer);
+	   public abstract boolean createCustomer(Customer customer);
 	   public abstract void updateCustomer(Customer customer);
 	   public abstract void deleteCustomer(Customer customer);
 	   public abstract void deleteAllCustomers();
